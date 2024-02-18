@@ -30,7 +30,8 @@ VOIP_METHOD = "sendSMS"
 
 # Phone number to send text message to
 MAIN_DST = os.getenv('MAIN_DST')
-EMERGENCY_DST = os.getenv('EMERGENCY_DST').split(',')
+EMERGENCY_DST = os.getenv('EMERGENCY_DST')
+EMERGENCY_DST = EMERGENCY_DST.split(',')
 
 # Function to send text message using the voip.ms REST API
 def send_text_message(message, dst):

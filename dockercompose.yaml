@@ -1,0 +1,12 @@
+version: '1'
+
+services:
+  email-to-sms-gateway:
+    image: sphexi/email-to-sms-gateway
+    environment:
+      - EMAIL = <email account login>
+      - PASSWORD = <email account password>
+      - POP3_SERVER = <pop3 server url>
+      - VOIP_USERNAME = <voip.ms username>
+      - VOIP_PASSWORD = <voip.ms api password>
+      - VOIP_DID = <voip.ms did>
