@@ -31,7 +31,9 @@ VOIP_METHOD = "sendSMS"
 # Phone number to send text message to
 MAIN_DST = os.getenv('MAIN_DST')
 EMERGENCY_DST = os.getenv('EMERGENCY_DST')
+print(EMERGENCY_DST)
 EMERGENCY_DST = EMERGENCY_DST.split(',')
+print(EMERGENCY_DST)
 
 # Function to send text message using the voip.ms REST API
 def send_text_message(message, dst):
@@ -41,7 +43,7 @@ def send_text_message(message, dst):
 # Function to check email using POP3
 def check_mail_pop3():
     mail = poplib.POP3_SSL(POP3_SERVER, POP3_PORT)
-    mail.set_debuglevel(0)
+    mail.set_debuglevel(1)
     mail.user(EMAIL)
     mail.pass_(PASSWORD)
     num_messages = len(mail.list()[1])
