@@ -80,8 +80,8 @@ def main():
                 print("Non-emergency detected!")
                 sms_response = send_text_message(from_address + "\n" + subject + "\n" + (datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")) + "\n\n" + (''.join(str(x) for x in body)), MAIN_DST)
                 print(sms_response)
-        print("Sleeping for " + WAIT_TIME + "seconds...")
-        time.sleep(WAIT_TIME)
+        print("Sleeping for " + WAIT_TIME + " seconds...")
+        time.sleep(int(WAIT_TIME))
 
 if __name__ == "__main__":
     main()
