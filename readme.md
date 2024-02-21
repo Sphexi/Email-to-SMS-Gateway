@@ -1,0 +1,12 @@
+# Purpose
+This Python script is designed to check an email account via POP3 protocol every minute and send a text message to a phone number if the email account has any unread emails. The text message is sent using the voip.ms REST API. The script also checks the subject of the email to determine if it is an emergency or non-emergency. If the subject of the email matches an item in the environment list, the script sends the text message to emergency phone numbers. If the subject of the email is anything else, the script sends the text message to a single non-emergency phone number.
+
+# Setting up
+The script uses several environment variables to configure its behavior. These include the email account settings (username, password, server, and port), the voip.ms settings (username, password, DID, and API URL), the phone numbers to send messages to (main and emergency), the emergency phrases to look for in email subjects, and the time to wait between checking email.
+
+# How it works
+The check_mail_pop3 function is used to check the email account for new messages. It connects to the POP3 server, logs in with the provided username and password, retrieves the list of messages, and then downloads each message in turn. The function then parses each message to extract the sender, subject, and body, and appends this information to a list. Once all messages have been processed, the function logs out of the POP3 server and returns the list of email information.
+
+The send_text_message function is used to send a text message via the voip.ms API. It constructs a GET request to the API with the necessary parameters (username, password, DID, destination number, and message), sends the request, and then returns the response text.
+
+The main function is the main loop of the script. It runs indefinitely, checking the email account for new messages every minute. If it finds any new messages, it prints out their information and then sends a text message with the email details. If the subject of the email matches one of the emergency phrases, the message is sent to all emergency numbers. Otherwise, it is sent to the main number. After processing all new messages, the function waits for the preset amount of time before checking the email account again.

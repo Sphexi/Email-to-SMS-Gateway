@@ -2,10 +2,10 @@
 # send a text message to a phone number if the email account has any unread
 # emails. This script will send the text message using the voip.ms REST API,
 # and will also check the subject of the email to determine if it is an
-# emergency or non-emergency. If the subject of the email is "SMOKE DETECTOR"
-# or "WATER LEAK DETECTED", the script will send the text message to 
-# emergency phone numbers. If the subject of the email is anything else, the
-# script will send the text message to a single non-emergency phone number.
+# emergency or non-emergency. If the subject of the email matches an item in the env 
+# list, the script will send the text message to emergency phone numbers. 
+# If the subject of the email is anything else, the script will send the text
+# message to a single non-emergency phone number.
 
 import email
 import time
@@ -30,8 +30,11 @@ VOIP_METHOD = "sendSMS"
 
 # Phone number to send text message to
 MAIN_DST = os.getenv('MAIN_DST')
-EMERGENCY_DST = os.getenv('EMERGENCY_DST')
-EMERGENCY_DST = EMERGENCY_DST.split(',')
+EMERGENCY_DST = os.getenv('EMERGENCY_DST').split(',')
+EMERGENCY_PHRASES = os.getenv('EMERGENCY_PHRASES').split(',')
+
+# Time to wait between checking email
+WAIT_TIME = os.getenv('WAIT_TIME')
 
 # Function to send text message using the voip.ms REST API
 def send_text_message(message, dst):
@@ -67,7 +70,8 @@ def main():
                 print("Subject:", subject)
                 print("Body:", body)
             print("Sending text message...")
-            if subject in ["SMOKE DETECTOR", "WATER LEAK DETECTED"]: # emergency
+            print("Emergency phrases:", EMERGENCY_PHRASES)
+            if subject in EMERGENCY_PHRASES: # emergency
                 print("Emergency detected!")
                 for dst in EMERGENCY_DST:
                     sms_response = send_text_message(from_address + "\n" + subject + "\n" + (datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")) + "\n\n" + (''.join(str(x) for x in body)), dst)
@@ -76,8 +80,8 @@ def main():
                 print("Non-emergency detected!")
                 sms_response = send_text_message(from_address + "\n" + subject + "\n" + (datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")) + "\n\n" + (''.join(str(x) for x in body)), MAIN_DST)
                 print(sms_response)
-        print("Sleeping for 60 seconds...")
-        time.sleep(60)
+        print("Sleeping for " + WAIT_TIME + "seconds...")
+        time.sleep(WAIT_TIME)
 
 if __name__ == "__main__":
     main()

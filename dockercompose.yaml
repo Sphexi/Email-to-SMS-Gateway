@@ -2,7 +2,7 @@ version: '1'
 
 services:
   email-to-sms-gateway:
-    image: sphexi/email-to-sms-gateway
+    image: ghcr.io/sphexi/email-to-sms-gateway:main
     environment:
       - EMAIL_USER=<email account login>
       - EMAIL_PASS=<email account password>
@@ -12,4 +12,6 @@ services:
       - VOIP_DID=<voip.ms did>
       - MAIN_DST=<non-emergency number to text>
       - EMERGENCY_DST=<csv of emergency numbers to text>
+      - EMERGENCY_PHRASES=<csv of emergency phrases>
+      - WAIT_TIME=<time to wait between checks>
     restart: unless-stopped
