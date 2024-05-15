@@ -13,6 +13,8 @@ import requests
 import datetime
 import poplib
 import os
+from anyascii import anyascii
+import quopri
 
 # Email account settings
 EMAIL = os.getenv('EMAIL_USER')
@@ -41,6 +43,12 @@ def send_text_message(message, dst):
     response = requests.get(VOIP_URL + "?api_username=" + VOIP_USERNAME + "&api_password=" + VOIP_PASSWORD + "&method=sendSMS&did=" + VOIP_DID + "&dst=" + dst + "&message=" + message[:160])
     return response.text
 
+# Function to decode MIME words
+def decode_mime_words(s):
+    return u''.join(
+        word.decode(encoding or 'utf8') if isinstance(word, bytes) else word
+        for word, encoding in email.header.decode_header(s))
+
 # Function to check email using POP3
 def check_mail_pop3():
     mail = poplib.POP3_SSL(POP3_SERVER, POP3_PORT)
@@ -52,7 +60,7 @@ def check_mail_pop3():
     for i in range(num_messages):
         response, raw_email, octets = mail.retr(i + 1)
         email_message = email.message_from_bytes(b'\n'.join(raw_email))
-        email_info.append((email_message['From'], email_message['Subject'], email_message.get_payload()))
+        email_info.append((email_message['From'], decode_mime_words(email_message['Subject']), email_message.get_payload()))
         mail.dele(i + 1) # delete email from server
     mail.quit()
     return email_info
