@@ -13,8 +13,6 @@ import requests
 import datetime
 import poplib
 import os
-from anyascii import anyascii
-import quopri
 
 # Email account settings
 EMAIL = os.getenv('EMAIL_USER')
